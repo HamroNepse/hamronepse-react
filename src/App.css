@@ -1,16 +1,13 @@
+body {
+  font-family: 'Poppins', sans-serif !important;
+  margin: 0; 
+  padding: 0;
+  box-sizing: border-box; 
+  background: aliceblue;
+}
+
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
 }
 
 .App-header {
@@ -27,12 +24,7 @@
 .App-link {
   color: #61dafb;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.alert-button {
+  height: 40px;
+  margin-top: 10px !important;
 }
