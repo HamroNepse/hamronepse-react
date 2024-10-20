@@ -35,8 +35,11 @@ const StockAlert = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // success or error
   const [stockList, setStockList] = useState([]);
 
+
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   useEffect(() => {
-    fetch('https://e97a-2407-5200-400-43a3-7d13-db99-b628-f3e4.ngrok-free.app/stocks/', {
+    fetch(`${baseUrl}/stocks/`, {
         method: 'GET',
         headers: new Headers({
             'ngrok-skip-browser-warning': '6024', // Add the ngrok skip warning header
@@ -66,7 +69,7 @@ const StockAlert = () => {
 
  // Function to fetch stock alerts
  const fetchStockAlerts = () => {
-  fetch('https://e97a-2407-5200-400-43a3-7d13-db99-b628-f3e4.ngrok-free.app/notifications/', {
+  fetch( `${baseUrl}/notifications/`, {
     method: 'GET',
     headers: {
       'ngrok-skip-browser-warning': '6024',
@@ -81,6 +84,7 @@ const StockAlert = () => {
     })
     .then((data) => {
       setAlerts(data.stock_alerts); // Adjust this based on your API structure
+      console.log(data.stock_alerts); // Adjust this based on your API structure
     })
     .catch((error) => {
       console.error('Error fetching stock alerts:', error);
@@ -112,7 +116,7 @@ useEffect(() => {
       };
 
       // Send the stock_price_thresholds data to the endpoint
-      fetch('https://e97a-2407-5200-400-43a3-7d13-db99-b628-f3e4.ngrok-free.app/notifications/add/', {
+      fetch( `${baseUrl}/notifications/add/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -145,7 +149,7 @@ useEffect(() => {
   };
 
   const toggleStatus = (alert) => {
-    const endpoint = `https://e97a-2407-5200-400-43a3-7d13-db99-b628-f3e4.ngrok-free.app/notifications/stock/${alert.id}/status/toggle`;
+    const endpoint = `${baseUrl}/notifications/stock/${alert.id}/status/toggle`;
     fetch(endpoint, {
       method: 'PUT', // Assuming the server accepts PUT requests for updating
       headers: {
@@ -184,7 +188,7 @@ useEffect(() => {
   };
 
   const removeAlert = (id) => {
-    fetch(`https://e97a-2407-5200-400-43a3-7d13-db99-b628-f3e4.ngrok-free.app/notifications/stock/${id}/delete`, {
+    fetch( `${baseUrl}/notifications/stock/${id}/delete`, {
       method: 'DELETE',
       headers: {
         'ngrok-skip-browser-warning': '6024',
