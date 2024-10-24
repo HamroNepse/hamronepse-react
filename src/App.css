@@ -28,3 +28,6 @@ body {
   height: 40px;
   margin-top: 10px !important;
 }
+.add-btn span {
+  margin-right: 0 !important;
+}

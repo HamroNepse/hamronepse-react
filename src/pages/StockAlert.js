@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -18,8 +18,13 @@ import {
   IconButton,
   Snackbar,
   Alert,
-  OutlinedInput 
+  OutlinedInput,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'; // Active bell icon
 import NotificationsOffIcon from '@mui/icons-material/NotificationsOff'; // Inactive bell icon
@@ -35,123 +40,125 @@ const StockAlert = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // success or error
   const [stockList, setStockList] = useState([]);
 
+  const [modalOpen, setModalOpen] = useState(false); // State for modal open/close
 
   const baseUrl = process.env.REACT_APP_BASE_URL;
 
   useEffect(() => {
     fetch(`${baseUrl}/stocks/`, {
-        method: 'GET',
-        headers: new Headers({
-            'ngrok-skip-browser-warning': '6024', // Add the ngrok skip warning header
-            'Content-Type': 'application/json', // Include content type if necessary
-        }),
+      method: 'GET',
+      headers: new Headers({
+        'ngrok-skip-browser-warning': '6024',
+        'Content-Type': 'application/json',
+      }),
     })
-    .then((response) => {
+      .then((response) => {
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return response.json(); // Ensure the response is parsed as JSON
-    })
-    .then((data) => {
+        return response.json();
+      })
+      .then((data) => {
         if (data.symbols) {
-            setStockList(data.symbols); // Update the state with the stock list
+          setStockList(data.symbols);
         } else {
-            throw new Error('Invalid data format received');
+          throw new Error('Invalid data format received');
         }
-    })
-    .catch((error) => {
+      })
+      .catch((error) => {
         console.error('Error fetching stock list:', error);
         setSnackbarMessage(`Error fetching stocks: ${error.message}`);
         setSnackbarSeverity('error');
         setSnackbarOpen(true);
-    });
-}, []);
+      });
+  }, [baseUrl]);
 
- // Function to fetch stock alerts
- const fetchStockAlerts = () => {
-  fetch( `${baseUrl}/notifications/`, {
-    method: 'GET',
-    headers: {
-      'ngrok-skip-browser-warning': '6024',
-      'Content-Type': 'application/json',
-    },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
+  const fetchStockAlerts = useCallback(() => {
+    fetch(`${baseUrl}/notifications/`, {
+      method: 'GET',
+      headers: {
+        'ngrok-skip-browser-warning': '6024',
+        'Content-Type': 'application/json',
+      },
     })
-    .then((data) => {
-      setAlerts(data.stock_alerts); // Adjust this based on your API structure
-      console.log(data.stock_alerts); // Adjust this based on your API structure
-    })
-    .catch((error) => {
-      console.error('Error fetching stock alerts:', error);
-      setSnackbarMessage(`Error fetching alerts: ${error.message}`);
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
-    });
-};
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setAlerts(data.stock_alerts);
+      })
+      .catch((error) => {
+        console.error('Error fetching stock alerts:', error);
+        setSnackbarMessage(`Error fetching alerts: ${error.message}`);
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
+      });
+  }, [baseUrl]);
 
-
-// Fetch stock alerts when the component mounts
-useEffect(() => {
-  fetchStockAlerts(); // Call the function here
-}, []);
-
+  useEffect(() => {
+    fetchStockAlerts();
+  }, [fetchStockAlerts]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-   
+
     const price_thresholds = {
       [selectedStock]: [
         { type: priceCondition, value: thresholdValue }
       ]
     };
 
-      // The object to send to the server
-      const dataToSend = {
-        price_thresholds: price_thresholds
-      };
+    const dataToSend = {
+      price_thresholds: price_thresholds
+    };
 
-      // Send the stock_price_thresholds data to the endpoint
-      fetch( `${baseUrl}/notifications/add/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataToSend),
+    fetch(`${baseUrl}/notifications/add/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataToSend),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to add stock alert');
+        }
+        return response.json();
       })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Failed to add stock alert');
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log('Success:', data);
-          setSnackbarMessage(data.msg);
-          setSnackbarSeverity('success');
-          setSnackbarOpen(true);
-          fetchStockAlerts();
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-          setSnackbarMessage(`Error: ${error.message}`);
-          setSnackbarSeverity('error');
-          setSnackbarOpen(true);
-        });
+      .then((data) => {
+        setSnackbarMessage(data.msg);
+        setSnackbarSeverity('success');
+        setSnackbarOpen(true);
+        fetchStockAlerts();
+        handleCloseModal(); // Close the modal on success
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        setSnackbarMessage(`Error: ${error.message}`);
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
+      });
   };
 
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
 
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedStock('');
+    setPriceCondition('');
+    setThresholdValue('');
+    setUnits(0);
+  };
+
   const toggleStatus = (alert) => {
     const endpoint = `${baseUrl}/notifications/stock/${alert.id}/status/toggle`;
     fetch(endpoint, {
-      method: 'PUT', // Assuming the server accepts PUT requests for updating
+      method: 'PUT',
       headers: {
         'ngrok-skip-browser-warning': '6024',
         'Content-Type': 'application/json',
@@ -164,17 +171,15 @@ useEffect(() => {
         return response.json();
       })
       .then((data) => {
-        console.log('Toggle success:', data);
-        // Update the local state to reflect the new status
         setAlerts((prevAlerts) =>
           prevAlerts.map((a) => {
             if (a.symbol === alert.symbol) {
-              return { ...a, is_active: !a.is_active }; // Toggle the status in the state
+              return { ...a, is_active: !a.is_active };
             }
             return a;
           })
         );
-        setSnackbarMessage(data.msg); // Use the message returned from the server
+        setSnackbarMessage(data.msg);
         setSnackbarSeverity('success');
         setSnackbarOpen(true);
       })
@@ -184,17 +189,15 @@ useEffect(() => {
         setSnackbarSeverity('error');
         setSnackbarOpen(true);
       });
-    
   };
 
   const removeAlert = (id) => {
-    fetch( `${baseUrl}/notifications/stock/${id}/delete`, {
+    fetch(`${baseUrl}/notifications/stock/${id}/delete`, {
       method: 'DELETE',
       headers: {
         'ngrok-skip-browser-warning': '6024',
         'Content-Type': 'application/json',
       },
-     
     })
       .then((response) => {
         if (!response.ok) {
@@ -203,89 +206,39 @@ useEffect(() => {
         return response.json();
       })
       .then((data) => {
-        console.log('Delete success:', data);
         setSnackbarMessage(data.msg);
         setSnackbarSeverity('success');
         setSnackbarOpen(true);
-        fetchStockAlerts(); // Refresh the alerts after deletion
+        fetchStockAlerts();
       })
       .catch((error) => {
-        setSnackbarMessage(`Error : ${error.message}`);
+        setSnackbarMessage(`Error: ${error.message}`);
         setSnackbarSeverity('error');
         setSnackbarOpen(true);
       });
   };
-  
 
   return (
     <Box sx={{ padding: '20px', maxWidth: '1200px', margin: 'auto', display: 'flex', gap: '20px' }}>
-      {/* Add Stock Alert Form */}
-      <Box sx={{ width: '40%' }}>
-        <Typography variant="h4" gutterBottom>
-          Add Stock Alert
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <FormControl fullWidth margin="normal">
-            <InputLabel id="stock-select-label">Select stock *</InputLabel>
-            <Select
-              labelId="stock-select-label"
-              value={selectedStock}
-              input={<OutlinedInput label="selectedStock" />}
-              onChange={(e) => setSelectedStock(e.target.value)}
-              required
-            >
-              {stockList.map((stock, index) => (
-                <MenuItem key={index} value={stock}>
-                  {stock}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+      {/* Add Stock Alert Button */}
 
-          <FormControl fullWidth margin="normal">
-            <InputLabel id="condition-select-label">Condition *</InputLabel>
-            <Select
-              labelId="condition-select-label"
-              value={priceCondition}
-              input={<OutlinedInput label="priceCondition" />}
-              onChange={(e) => setPriceCondition(e.target.value)}
-              required
-            >
-              <MenuItem value="below">Less than(Below)</MenuItem>
-              <MenuItem value="above">Greater than(Above)</MenuItem>
-            </Select>
-          </FormControl>
-
-          <TextField
-            label="Price"
-            type="number"
-            value={thresholdValue}
-            onChange={(e) => setThresholdValue(e.target.value)}
-            required
-            fullWidth
-            margin="normal"
-          />
-
-          <TextField
-            label="Units greater than"
-            type="number"
-            value={units}
-            onChange={(e) => setUnits(e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-
-          <Button type="submit" variant="contained" color="primary" fullWidth className="alert-button">
-            ADD NOTIFICATION
-          </Button>
-        </form>
-      </Box>
 
       {/* Stock Alert List */}
-      <Box sx={{ width: '60%' }}>
-        <Typography variant="h4" gutterBottom>
-          Stock Alert List
-        </Typography>
+      <Box sx={{ width: '100%' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+      <Typography variant="h4" gutterBottom style={{ flexGrow: 1, textAlign: 'center' }}>
+        Stock Alerts
+      </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setModalOpen(true)}
+        startIcon={<AddIcon />}
+        className='add-btn'
+      >
+        {/* You can keep this empty or remove the text */}
+      </Button>
+    </div>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -344,6 +297,56 @@ useEffect(() => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+
+      {/* Modal for Adding Stock Alert */}
+      <Dialog open={modalOpen} onClose={handleCloseModal}>
+        <DialogTitle>Add Stock Alert</DialogTitle>
+        <DialogContent>
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel>Stock Symbol</InputLabel>
+            <Select
+              value={selectedStock}
+              onChange={(e) => setSelectedStock(e.target.value)}
+              input={<OutlinedInput label="Stock Symbol" />}
+            >
+              {stockList.map((stock) => (
+                <MenuItem key={stock} value={stock}>
+                  {stock}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel>Condition</InputLabel>
+            <Select
+              value={priceCondition}
+              onChange={(e) => setPriceCondition(e.target.value)}
+              input={<OutlinedInput label="Condition" />}
+            >
+              <MenuItem value="above">Above</MenuItem>
+              <MenuItem value="below">Below</MenuItem>
+            </Select>
+          </FormControl>
+
+          <TextField
+            label="Threshold Value"
+            type="number"
+            fullWidth
+            value={thresholdValue}
+            onChange={(e) => setThresholdValue(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit} color="primary" disabled={!selectedStock || !priceCondition || !thresholdValue}>
+            Add Alert
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
