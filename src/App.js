@@ -83,11 +83,6 @@ function App() {
                 <Route path="/tScreener" element={<TechnicalScreener />} />
                 <Route path="/live" element={<LiveMarket />} />
               </Routes>
-              <Box sx={{ py: 1, textAlign: 'center', }}>
-                <Typography variant="body2" color="text.secondary">
-                  © {new Date().getFullYear()} HamroNepse. All rights reserved.
-                </Typography>
-              </Box>
             </Box>
           </Box>
         </div>
