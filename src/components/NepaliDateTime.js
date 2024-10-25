@@ -35,8 +35,8 @@ const NepaliDateTime = () => {
   }, []);
 
   return (
-    <div style={{ color: theme.palette.text.primary, textAlign: 'center' }}>
-      <h4>{currentDate}, {currentTime}</h4>
+    <div style={{ color: theme.palette.text.primary, textAlign: 'center' , minWidth:'152px' }}>
+      <h4 style={{ fontWeight:'600' }}>{currentDate}, {currentTime}</h4>
     </div>
   );
 };

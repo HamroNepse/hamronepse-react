@@ -30,6 +30,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'; // Active bell icon
 import NotificationsOffIcon from '@mui/icons-material/NotificationsOff'; // Inactive bell icon
 import Zoom from '@mui/material/Zoom';
+import Slide from '@mui/material/Slide';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const StockAlert = () => {
   const [selectedStock, setSelectedStock] = useState('');
@@ -301,7 +306,7 @@ const StockAlert = () => {
       </Snackbar>
 
       {/* Modal for Adding Stock Alert */}
-      <Dialog open={modalOpen} onClose={handleCloseModal}>
+      <Dialog open={modalOpen} onClose={handleCloseModal} TransitionComponent={Transition} keepMounted>
         <DialogTitle>Add Stock Alert</DialogTitle>
         <DialogContent>
           <FormControl fullWidth sx={{ mb: 2 }}>
