@@ -230,25 +230,47 @@ const StockAlert = () => {
 
       {/* Stock Alert List */}
       <Box sx={{ width: '100%' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-      <Typography variant="h4" gutterBottom style={{ flexGrow: 1, textAlign: 'center' }}>
-        Stock Alerts
-      </Typography>
-      <Tooltip TransitionComponent={Zoom}  placement="top" arrow title="Add stock">
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setModalOpen(true)}
-        startIcon={<AddIcon />}
-        className='add-btn'
-      >
-        {/* You can keep this empty or remove the text */}
-      </Button>
-      </Tooltip>
-    </div>
-        <TableContainer component={Paper}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <Typography variant="h4" gutterBottom style={{ flexGrow: 1, textAlign: 'center' }}>
+            Stock Alerts
+          </Typography>
+          <Tooltip TransitionComponent={Zoom} placement="top" arrow title="Add stock">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setModalOpen(true)}
+              startIcon={<AddIcon />}
+              className='add-btn'
+            >
+              {/* You can keep this empty or remove the text */}
+            </Button>
+          </Tooltip>
+        </div>
+        <TableContainer component={Paper} sx={{
+          height: '70vh', maxHeight: 'fit-content', '&::-webkit-scrollbar': {
+            width: '8px',
+          },
+          '&::-webkit-scrollbar-track': {
+            // backgroundColor: '#f1f1f1',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: '#888',
+            borderRadius: '10px',
+            border: '2px solid transparent',
+          },
+          '&::-webkit-scrollbar-thumb:hover': {
+            backgroundColor: '#555',
+          },
+        }}>
           <Table>
-            <TableHead>
+            <TableHead
+              sx={{
+                position: 'sticky',
+                top: 0,
+                zIndex: 1,
+                backdropFilter: 'blur(100px)',
+              }}
+            >
               <TableRow>
                 <TableCell>Stock Symbol</TableCell>
                 <TableCell>Condition (Type)</TableCell>
@@ -306,8 +328,8 @@ const StockAlert = () => {
       </Snackbar>
 
       {/* Modal for Adding Stock Alert */}
-      <Dialog open={modalOpen} onClose={handleCloseModal} TransitionComponent={Transition} keepMounted sx={{width: '400px', margin: 'auto'}}>
-        <DialogTitle sx={{padding: '16px', textAlign: 'center'}}>Add Stock Alert</DialogTitle>
+      <Dialog open={modalOpen} onClose={handleCloseModal} TransitionComponent={Transition} keepMounted sx={{ width: '400px', margin: 'auto' }}>
+        <DialogTitle sx={{ padding: '16px', textAlign: 'center' }}>Add Stock Alert</DialogTitle>
         <DialogContent>
           <FormControl fullWidth sx={{ mb: 2, mt: 1 }}>
             <InputLabel>Stock Symbol</InputLabel>
@@ -349,7 +371,7 @@ const StockAlert = () => {
           <Button onClick={handleCloseModal} color="primary">
             Cancel
           </Button>
-          
+
           <Button onClick={handleSubmit} color="primary" disabled={!selectedStock || !priceCondition || !thresholdValue}>
             Add Alert
           </Button>
