@@ -6,7 +6,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'; 
 import TimelineIcon from '@mui/icons-material/Timeline';
-import NepaliDateTime from "./NepaliDateTime";
+// import NepaliDateTime from "./NepaliDateTime";
 
 const NAVIGATION = [
   { title: 'Portfolio', icon: <DashboardIcon />, path: '/portfolio' },
@@ -30,7 +30,7 @@ const SideNavBar = () => {
       <Typography variant="h6" sx={{ marginBottom: 2 }} color="lawngreen">
         Hamro Nepse
       </Typography>
-      <NepaliDateTime/>
+      {/* <NepaliDateTime/> */}
       {/* Navigation Links */}
       <List>
         {NAVIGATION.map((item, index) => (

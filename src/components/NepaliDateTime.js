@@ -1,14 +1,14 @@
-// src/components/NepaliDateTime.js
-
 import React, { useEffect, useState } from 'react';
+import { useTheme } from '@mui/material/styles';  // Import useTheme to access the theme
 
 const NepaliDateTime = () => {
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
 
+  const theme = useTheme(); // Access the current theme
+
   useEffect(() => {
     const updateNepaliDateTime = () => {
-      // Get the current date and time
       const now = new Date();
 
       // Format the date as "MMM DD"
@@ -29,13 +29,13 @@ const NepaliDateTime = () => {
     };
 
     updateNepaliDateTime();
-    const intervalId = setInterval(updateNepaliDateTime, 1000); // Update every second
+    const intervalId = setInterval(updateNepaliDateTime, 1000);
 
-    return () => clearInterval(intervalId); // Cleanup on unmount
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
-    <div style={{ color: 'white',  textAlign: 'center' }}>
+    <div style={{ color: theme.palette.text.primary, textAlign: 'center' }}>
       <h4>{currentDate}, {currentTime}</h4>
     </div>
   );

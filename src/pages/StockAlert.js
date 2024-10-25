@@ -23,17 +23,18 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Tooltip,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'; // Active bell icon
 import NotificationsOffIcon from '@mui/icons-material/NotificationsOff'; // Inactive bell icon
+import Zoom from '@mui/material/Zoom';
 
 const StockAlert = () => {
   const [selectedStock, setSelectedStock] = useState('');
   const [priceCondition, setPriceCondition] = useState('');
   const [thresholdValue, setThresholdValue] = useState('');
-  const [units, setUnits] = useState(0);
   const [alerts, setAlerts] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -152,7 +153,6 @@ const StockAlert = () => {
     setSelectedStock('');
     setPriceCondition('');
     setThresholdValue('');
-    setUnits(0);
   };
 
   const toggleStatus = (alert) => {
@@ -229,6 +229,7 @@ const StockAlert = () => {
       <Typography variant="h4" gutterBottom style={{ flexGrow: 1, textAlign: 'center' }}>
         Stock Alerts
       </Typography>
+      <Tooltip TransitionComponent={Zoom}  placement="top" arrow title="Add stock">
       <Button
         variant="contained"
         color="primary"
@@ -238,6 +239,7 @@ const StockAlert = () => {
       >
         {/* You can keep this empty or remove the text */}
       </Button>
+      </Tooltip>
     </div>
         <TableContainer component={Paper}>
           <Table>
@@ -342,6 +344,7 @@ const StockAlert = () => {
           <Button onClick={handleCloseModal} color="primary">
             Cancel
           </Button>
+          
           <Button onClick={handleSubmit} color="primary" disabled={!selectedStock || !priceCondition || !thresholdValue}>
             Add Alert
           </Button>
