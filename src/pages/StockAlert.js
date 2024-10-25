@@ -197,7 +197,7 @@ const StockAlert = () => {
         setSnackbarOpen(true);
       });
   };
-  
+
   const MenuProps = {
     PaperProps: {
       style: {
@@ -284,8 +284,8 @@ const StockAlert = () => {
               }}
             >
               <TableRow>
-                <TableCell>Stock Symbol</TableCell>
-                <TableCell>Condition (Type)</TableCell>
+                <TableCell> Symbol</TableCell>
+                <TableCell>Type</TableCell>
                 <TableCell>Price</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>Action</TableCell>
