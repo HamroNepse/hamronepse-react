@@ -67,3 +67,16 @@ body {
 .blobs span:nth-child(2) {
   animation-delay: 0.5s;
 }
+
+
+.themeToggle .light-mode {
+  animation: rotate-animation 18s linear infinite;
+}
+@keyframes rotate-animation {
+  from {
+      transform: rotate(0deg);
+  }
+  to {
+      transform: rotate(360deg);
+  }
+}

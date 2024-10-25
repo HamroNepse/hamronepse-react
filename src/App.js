@@ -11,9 +11,9 @@ import { Divider, Box, IconButton } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkTheme } from './theme'; // Import both themes
 import { useState, useEffect } from 'react';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
 import NepaliDateTime from "./components/NepaliDateTime";
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 
 
 function App() {
@@ -63,9 +63,9 @@ function App() {
 
                   onClick={handleThemeChange}
                   color="inherit"
-                  className='lightMode'
+                  className='themeToggle'
                 >
-                  {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+                  {darkMode ? <LightModeIcon className='light-mode' /> : <DarkModeIcon />}
                 </IconButton>
                 <Divider
                   orientation="vertical"

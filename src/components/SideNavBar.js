@@ -26,8 +26,8 @@ const SideNavBar = () => {
   };
 
   return (
-    <Box sx={{ minWidth: 250, bgcolor: '#333', height: '100vh', color: 'white', padding: 2 }}>
-      <Typography variant="h6" sx={{ marginBottom: 2 }} color="lawngreen">
+    <Box sx={{ minWidth: 250, bgcolor: '#333',minHeight: '100vh', color: 'white', paddingX : 2}}>
+      <Typography variant="h6" sx={{ marginY: 2 }} color="lawngreen">
         Hamro Nepse
       </Typography>
       {/* <NepaliDateTime/> */}

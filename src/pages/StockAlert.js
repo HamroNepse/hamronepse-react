@@ -306,10 +306,10 @@ const StockAlert = () => {
       </Snackbar>
 
       {/* Modal for Adding Stock Alert */}
-      <Dialog open={modalOpen} onClose={handleCloseModal} TransitionComponent={Transition} keepMounted>
-        <DialogTitle>Add Stock Alert</DialogTitle>
+      <Dialog open={modalOpen} onClose={handleCloseModal} TransitionComponent={Transition} keepMounted sx={{width: '400px', margin: 'auto'}}>
+        <DialogTitle sx={{padding: '16px', textAlign: 'center'}}>Add Stock Alert</DialogTitle>
         <DialogContent>
-          <FormControl fullWidth sx={{ mb: 2 }}>
+          <FormControl fullWidth sx={{ mb: 2, mt: 1 }}>
             <InputLabel>Stock Symbol</InputLabel>
             <Select
               value={selectedStock}
