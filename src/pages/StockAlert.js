@@ -50,6 +50,8 @@ const StockAlert = () => {
 
   const baseUrl = process.env.REACT_APP_BASE_URL;
 
+ 
+
   useEffect(() => {
     fetch(`${baseUrl}/stocks/`, {
       method: 'GET',
@@ -195,6 +197,14 @@ const StockAlert = () => {
         setSnackbarOpen(true);
       });
   };
+  
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: 200, // Limit the dropdown's max height
+      },
+    },
+  };
 
   const removeAlert = (id) => {
     fetch(`${baseUrl}/notifications/stock/${id}/delete`, {
@@ -221,6 +231,8 @@ const StockAlert = () => {
         setSnackbarSeverity('error');
         setSnackbarOpen(true);
       });
+
+      
   };
 
   return (
@@ -337,6 +349,7 @@ const StockAlert = () => {
               value={selectedStock}
               onChange={(e) => setSelectedStock(e.target.value)}
               input={<OutlinedInput label="Stock Symbol" />}
+              MenuProps={MenuProps}
             >
               {stockList.map((stock) => (
                 <MenuItem key={stock} value={stock}>
