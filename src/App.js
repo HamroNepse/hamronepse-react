@@ -7,7 +7,7 @@ import StockAlert from './pages/StockAlert';
 import BuySell from './pages/BuySell';
 import TechnicalScreener from './pages/TechnicalScreener';
 import LiveMarket from './pages/LiveMarket';
-import { Divider, Box, IconButton } from '@mui/material';
+import { Divider, Box, IconButton, Typography } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkTheme } from './theme'; // Import both themes
 import { useState, useEffect } from 'react';
@@ -83,6 +83,11 @@ function App() {
                 <Route path="/tScreener" element={<TechnicalScreener />} />
                 <Route path="/live" element={<LiveMarket />} />
               </Routes>
+              <Box sx={{ py: 1, textAlign: 'center', }}>
+                <Typography variant="body2" color="text.secondary">
+                  © {new Date().getFullYear()} HamroNepse. All rights reserved.
+                </Typography>
+              </Box>
             </Box>
           </Box>
         </div>
