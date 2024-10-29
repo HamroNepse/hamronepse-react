@@ -61,6 +61,18 @@ body {
     box-shadow: 0 0 0 11px rgba(255, 255, 255, 0);
   }
 }
+@keyframes pulse_animation_open {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 128, 0, 0.7); /* Green color */
+  }
+  100% {
+    box-shadow: 0 0 0 11px rgba(255, 255, 255, 0); /* Transparent white */
+  }
+}
+.blobs.open span {
+  background: #00a000; /* Green background */
+  animation: pulse_animation_open 2s infinite;
+}
 /* .blob span:hover {
     animation: pulse-white 3s infinite;
 } */
@@ -86,10 +98,6 @@ body {
   width: 8px;
 }
 
-::-webkit-scrollbar-track {
-  /* Uncomment the line below if you want a custom track background */
-  /* background-color: #f1f1f1; */
-}
 
 ::-webkit-scrollbar-thumb {
   background-color: #888;

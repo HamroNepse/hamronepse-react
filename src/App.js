@@ -7,7 +7,7 @@ import StockAlert from './pages/StockAlert';
 import BuySell from './pages/BuySell';
 import TechnicalScreener from './pages/TechnicalScreener';
 import LiveMarket from './pages/LiveMarket';
-import { Divider, Box, IconButton, Typography } from '@mui/material';
+import { Divider, Box, IconButton } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkTheme } from './theme'; // Import both themes
 import { useState, useEffect } from 'react';
@@ -18,11 +18,29 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
+  const [marketOpen, setMarketOpen] = useState(false);
 
   // Toggle between dark and light mode
   const handleThemeChange = () => {
     setDarkMode(!darkMode);
   };
+  useEffect(() => {
+    const fetchMarketStatus = async () => {
+      try {
+        const response = await fetch("/nepse-data/market-open");
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const data = await response.json();
+        setMarketOpen(data.isOpen === "OPEN");
+        console.log(data)
+      } catch (error) {
+        console.error("Failed to fetch market status:", error);
+      }
+    };
+  
+    fetchMarketStatus();
+  }, []);
+  
 
   // Update the body background color based on the theme
   useEffect(() => {
@@ -49,9 +67,9 @@ function App() {
               {/* Toggle button for dark and light mode */}
               <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center', height: '30px' }}>
 
-                <div className="blobs" style={{ marginRight: '16px' }}>
-                  <span></span>
-                  <span></span>
+                <div  className={`blobs ${marketOpen ? 'open' : ''}`} style={{ marginRight: '16px' }}>
+                <span style={{ background: marketOpen ? 'green' : '#df0c0c' }}></span>
+                <span style={{ background: marketOpen ? 'green' : '#df0c0c' }}></span>
                 </div>
                 <Divider
                   orientation="vertical"
